@@ -1,7 +1,11 @@
-var app = require('express')();
-var server = require('http').Server(app);
-var io = require('socket.io')(server);
+const express = require('express');
+const http = require('http');
+const app = express();
+const server = http.Server(app);
 
+const io = require('socket.io')(server);
+
+app.use(express.static('public'));
 
 const tictactoe = { rooms : [] } ;
 const connectfour = { rooms : [] } ;
@@ -13,8 +17,9 @@ io.on('connection', function (socket) {
 
 
 
-    socket.on('username-change', function(username){
-      socket.username = username;
+    socket.on('profile-change', function(data){
+      socket.username = data['username'];
+      socket.color = data['color'];
     });
 
     socket.on('join-room', function(roomId){
@@ -25,9 +30,8 @@ io.on('connection', function (socket) {
       console.log('user '+ socket.username + ' joined room ' + roomId);
 
       socket.on('message', function(data){
-        socket.in(data['room']).emit('message',{message : data['message'],username : socket.username});
+        socket.in(data['room']).emit('message',{message : data['message'],username : socket.username, color : socket.color});
       });
-      console.log(socket);
     });
 
     socket.on('leave-room', function(roomId){
