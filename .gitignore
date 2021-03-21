@@ -1,3 +1,4 @@
 # dependencies
 /node_modules
-/app/config/keys
+/app/config/keys/id_rsa_priv.pem
+/app/config/keys/id_rsa_pub.pem
