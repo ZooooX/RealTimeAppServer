@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const baseOptions = {
   discriminatorKey: 'itemtype', // our discriminator key, could be anything
-  collection: 'items', // the name of our collection
+  collection: 'rooms', // the name of our collection
 };
 
 const Baseroom = mongoose.model(

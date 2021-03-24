@@ -1,9 +1,11 @@
 /** API ROUTES */
-
 const router = require('express').Router();
 
 const authRoutes = require("./auth.routes");
+const roomRoutes = require("./room.routes");
 
+//middlewares
+const { authJwt } = require('../middlewares');
 
 router.get('/', function(req,res){
     res.json({
@@ -13,5 +15,6 @@ router.get('/', function(req,res){
 });
 
 router.use("/auth", authRoutes);
+router.use("/room",authJwt.verifyToken,roomRoutes);
 
 module.exports = router;

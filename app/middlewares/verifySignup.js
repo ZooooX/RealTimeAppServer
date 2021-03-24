@@ -1,5 +1,5 @@
-const db = require("../models");
-const User = db.user;
+const UserService = require('../services/UserService');
+const userServiceInstance = new UserService();
 
 
 checkEmptyFields = (req, res, next) => {
@@ -13,39 +13,29 @@ checkEmptyFields = (req, res, next) => {
 
 checkDuplicateUsernameOrEmail = (req,res,next) => {
     //check username
-
-    User.findOne({
-        username : req.body.username
-    }).exec((err, user) => {
-        if(err){
-            res.status(500).send({message : err});
-            return;
-        }
-
+   userServiceInstance.getByField("username",req.body.username).then((user) => {
+       
         if(user){
-            res.status(400).send({message : 'Username already in use'});
-            return;
+            return res.status(400).send({message : 'Username already in use'});
         }
 
         //check email
-        User.findOne({
-            email : req.body.email
-        }).exec((err, user) => {
-            if(err){
-                res.status(500).send({message : err});
-                return;
-            }
+        userServiceInstance.getByField("email",req.body.email).then((user) => {
 
-            if (user){
-                res.status(400).send({message : 'Email already in use'});
-                return;
+            if(user){
+                return res.status(400).send({message : 'Email already in use'});
             }
 
             next();
-        });
-    });
-};
 
+        }).catch((err) => {
+            return res.status(500).send({message : err});
+        });
+
+   }).catch((err) => {
+    return res.status(500).send({message : err});
+   });
+};
 
 const verifySignup = {
     checkEmptyFields,

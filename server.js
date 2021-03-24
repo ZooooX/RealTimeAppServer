@@ -19,11 +19,14 @@ app.use(express.urlencoded({extended : true}));
 const db = require('./app/models');
 const dbConfig = require('./app/config/db.config');
 
+const Game = db.game;
+
 db.mongoose
     .connect(`mongodb://${dbConfig.HOST}/${dbConfig.DB}`, 
     {useNewUrlParser : true, useUnifiedTopology:true})
     .then(() => {
         console.log("Succesfully connected to database");
+        db.initDB();
     })
     .catch(err => {
         console.log("Error connecting to db", err);
@@ -47,3 +50,6 @@ app.get('/', (req,res) => res.send('Hell World'));
 app.listen(port, function(){
     console.log('server started on port :' + port);
 });
+
+
+

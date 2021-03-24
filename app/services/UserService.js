@@ -23,6 +23,13 @@ class UserService {
     delete(id){
         return User.findByIdAndDelete(id).exec();
     }
+
+    getByField(field,value){
+        let query = {};
+        query[field] = value;
+
+        return User.findOne(query).exec();
+    }
 }
 
 module.exports = UserService;
